@@ -69,8 +69,8 @@ def general_map(rdd, f):
     raise NotImplementedError
     # ^^^^ remove TODO and raise NotImplementedError when implemented :)
 
-# Remove skip when implemented
-# @pytest.mark.skip
+# Remove skip when implemented!
+@pytest.mark.skip
 def test_general_map():
     rdd = sc.parallelize(["cat", "dog", "cow", "zebra"])
 
@@ -117,7 +117,8 @@ def general_reduce(rdd, f):
     # TODO
     raise NotImplementedError
 
-# @pytest.mark.skip
+# Remove skip when implemented!
+@pytest.mark.skip
 def test_general_reduce():
     rdd = sc.parallelize(["cat", "dog", "cow", "zebra"])
 
