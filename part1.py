@@ -3,6 +3,7 @@ Part 1: MapReduce
 
 In our first part, we will practice using MapReduce
 to create several pipelines.
+This part has 20 questions.
 
 As you complete your code, you can run the code with
 
@@ -15,6 +16,9 @@ and you can view the output so far in:
 
 In general, follow the same guidelines as in HW1!
 Make sure that the output in part1-answers.txt looks correct.
+See "Grading notes" here:
+https://github.com/DavisPL-Teaching/119-hw1/blob/main/part1.py
+
 If you aren't sure of the type of the output, please post a question on Piazza.
 """
 
@@ -24,7 +28,7 @@ from pyspark.sql import SparkSession
 spark = SparkSession.builder.appName("DataflowGraphExample").getOrCreate()
 sc = spark.sparkContext
 
-# Imports
+# Additional imports
 import pytest
 
 """
@@ -63,10 +67,10 @@ def general_map(rdd, f):
     """
     # TODO
     raise NotImplementedError
-    # ^^^^ remove TODO and raise NotImplementedError when implemented
+    # ^^^^ remove TODO and raise NotImplementedError when implemented :)
 
 # Remove skip when implemented
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_general_map():
     rdd = sc.parallelize(["cat", "dog", "cow", "zebra"])
 
@@ -78,13 +82,14 @@ def test_general_map():
 
     # Map returning length
     rdd3 = general_map(rdd1, lambda k, v: [(k, len(v))])
+    rdd4 = rdd3.map(lambda pair: pair[1])
 
     # Map returnning odd or even length
-    rdd4 = general_map(rdd1, lambda k, v: [(len(v) % 2, ())])
+    rdd5 = general_map(rdd1, lambda k, v: [(len(v) % 2, ())])
 
     assert rdd2.collect() == []
-    assert sum(rdd3.collect()) == 14
-    assert set(rdd4.collect()) == set([(1, ())])
+    assert sum(rdd4.collect()) == 14
+    assert set(rdd5.collect()) == set([(1, ())])
 
 def q1():
     # Answer to this part: don't change this
@@ -112,7 +117,7 @@ def general_reduce(rdd, f):
     # TODO
     raise NotImplementedError
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_general_reduce():
     rdd = sc.parallelize(["cat", "dog", "cow", "zebra"])
 
@@ -124,15 +129,15 @@ def test_general_reduce():
     res2 = set(rdd2.collect())
 
     # Reduce, adding lengths
-    rdd3 = general_map(rdd1, lambda pair: (pair[0], len(pair[1])))
+    rdd3 = general_map(rdd1, lambda k, v: [(k, len(v))])
     rdd4 = general_reduce(rdd3, lambda x, y: x + y)
     res4 = sorted(rdd4.collect())
 
     assert (
-        res2 == set(["catcow", "dog", "zebra"])
-        or res2 == set(["cowcat", "dog", "zebra"])
+        res2 == set([('c', "catcow"), ('d', "dog"), ('z', "zebra")])
+        or res2 == set([('c', "cowcat"), ('d', "dog"), ('z', "zebra")])
     )
-    assert res4 == [3, 5, 6]
+    assert res4 == [('c', 6), ('d', 3), ('z', 5)]
 
 def q2():
     # Answer to this part: don't change this
@@ -187,7 +192,8 @@ def q5(rdd):
     raise NotImplementedError
 
 """
-6. Among the numbers from 1 to 1 million, which digit is most common, with what frequency?
+6. Among the numbers from 1 to 1 million, when written out,
+which digit is most common, with what frequency?
 And which is the least common, with what frequency?
 
 (If there are ties, you may answer any of the tied digits.)
@@ -282,10 +288,9 @@ Discussion questions
 """
 
 """
-===== Questions 11-19: MapReduce Edge Cases =====
+===== Questions 11-18: MapReduce Edge Cases =====
 
-For the last few questions, we will explore interesting edge cases
-in MapReduce.
+For the remaining questions, we will explore two interesting edge cases in MapReduce.
 
 11. One edge case occurs when there is no output for the reduce stage.
 This can happen if the map stage returns an empty list (for all keys).
@@ -304,26 +309,28 @@ def q11(rdd):
 
 """
 12. What happened? Explain below.
+Does this depend on anything specific about how
+we chose to define general_reduce?
 
 === ANSWER Q12 BELOW ===
 
 === END OF Q12 ANSWER ===
 
-13. Finally, we will explore a second edge case, where the reduce stage can
+13. Lastly, we will explore a second edge case, where the reduce stage can
 output different values depending on the order of the input.
 This leads to something called "nondeterminism", where the output of the
 pipeline can even change between runs!
 
 First, take a look at the definition of your general_reduce function.
-Why could it be the case that the output of the reduce stage is different
-depending on the order of the input?
+Why do you imagine it could be the case that the output of the reduce stage
+is different depending on the order of the input?
 
 === ANSWER Q13 BELOW ===
 
 === END OF Q13 ANSWER ===
 
 14.
-Now demonstrate this edge case by writing a specific example below.
+Now demonstrate this edge case concretely by writing a specific example below.
 As before, you should use the same dataset from Q4.
 
 Important: Please create an example where the output of the reduce stage is a set of (integer, integer) pairs.
@@ -340,7 +347,8 @@ def q14(rdd):
 15.
 Run your pipeline. What happens?
 Does it exhibit nondeterministic behavior on different runs?
-(It may or may not! This depends on the Spark scheduler and implementation.)
+(It may or may not! This depends on the Spark scheduler and implementation,
+including partitioning.
 
 === ANSWER Q15 BELOW ===
 
@@ -368,7 +376,7 @@ def q16_c():
     raise NotImplementedError
 
 """
-Discussion
+Discussion questions
 
 17. Was the answer different for the different levels of parallelism?
 
@@ -382,7 +390,30 @@ Explain why or why not.
 === ANSWER Q18 BELOW ===
 
 === END OF Q18 ANSWER ===
+
+===== Q19-20: Further reading =====
+
+19.
+The following is a very nice paper
+which explores this in more detail in the context of real-world MapReduce jobs.
+https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/icsecomp14seip-seipid15-p.pdf
+
+Take a look at the paper. What is one sentence you found interesting?
+
+=== ANSWER Q19 BELOW ===
+
+=== END OF Q19 ANSWER ===
+
+20.
+Take one example from the paper, and try to implement it using our
+general_map and general_reduce functions.
+For this part, just return the answer "True" at the end if you found
+it possible to implement the example, and "False" if it was not.
 """
+
+def q20():
+    # TODO
+    raise NotImplementedError
 
 """
 That's it for Part 1!
@@ -448,6 +479,10 @@ def PART_1_PIPELINE():
     log_answer("q16c", q16_c)
     # 17: commentary
     # 18: commentary
+
+    # Questions 19-20
+    # 19: commentary
+    log_answer("q20", q20)
 
     # Answer: return the number of questions that are not implemented
     if UNFINISHED > 0:

@@ -13,6 +13,9 @@ https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.RDD.flatMa
 
 https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.RDD.reduceByKey.html
 
+4. Remember that a Python range(a, b)
+includes a but does not include b.
+
 5. To compute an average, you need the sum and the count.
 It will be helpful to keep track of both at once
 after the map stage and when reducing.
@@ -48,6 +51,7 @@ part is "will be combined (in some order) until there
 are no values of that key left".
 
 14.
+Hint 1:
 Reduce is a function that basically takes two integers and returns an integer, for example
     x, y ==> x + y
 If the function is like addition or multiplication, then it will
@@ -55,8 +59,16 @@ be commutative/associative, so it doesn't matter what order things are reduced i
 
 To get a different example, you need something that is either not commutative or not associative.
 
+Hint 2:
+There is an example of a noncommutative reducer somewhere else in the file already!
+
 16.
 You can set the parallelism to whatever you want, say,
 1, 2, and 10.
 reminder: the syntax is
 sc.parallelize(data, parallelism)
+
+20.
+Hint:
+It should be possible to implement all the examples.
+The simplest one to try is probably Fig. 7, Type 1.

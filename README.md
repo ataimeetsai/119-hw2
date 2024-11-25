@@ -13,9 +13,12 @@ Similar to Homework 1, it will be released in 3 parts.
 
 ## Getting Started
 
-Clone this repository to your own machine (or open up a Codespace),
-then open up and complete `part1.py`, `part2.py`, and `part3.py`.
+Clone this repository to your own machine (or open up a Codespace).
+Important: please do not create a "fork"! If you work on your
+own copy, it should be a private repository.
+Please see instructions here: https://piazza.com/class/m12ef423uj5p5/post/87
 
+Then open up and complete `part1.py`, `part2.py`, and `part3.py`.
 You will need a working installation of PySpark.
 For Windows users, we recommend GitHub Codespaces.
 
@@ -26,7 +29,6 @@ If you are still stuck, please ask a question on Piazza!
 ## Submitting Your Code
 
 To submit your homework, upload (via git repository or a zip file) to Gradescope, as in HW1.
-See instructions on Piazza.
 
 ## Grading Notes
 
