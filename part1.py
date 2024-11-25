@@ -4,10 +4,6 @@ Part 1: MapReduce
 In our first part, we will practice using MapReduce
 to create several pipelines.
 
-At the end, I will ask you to measure the performance of your
-pipelines using your ThroughputHelper and LatencyHelper
-from HW1.
-
 As you complete your code, you can run the code with
 
     python3 part1.py

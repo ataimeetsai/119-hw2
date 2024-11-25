@@ -1,4 +1,4 @@
-# ECS 119 Homework 2: Spark
+# ECS 119 Homework 2: Parallel and Distributed Pipelines
 
 **Due date: Dec 9, 11:59pm**
 
