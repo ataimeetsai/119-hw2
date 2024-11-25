@@ -37,12 +37,18 @@ import pytest
 We will first implement the generalized version of MapReduce.
 It works on (key, value) pairs:
 
-- During the map stage, for each (key, value1) we can
-  create a list of (key, value2)s.
+- During the map stage, for each (key1, value1) pairs we
+  create a list of (key2, value2) pairs.
+  All of the values are output as the result of the map stage.
 
 - During the reduce stage, we will apply a reduce_by_key
   function (value2, value2) -> value2
-  that describes how to combine two functions.
+  that describes how to combine two values.
+  The values (key2, value2) will be grouped
+  by key, then values of each key key2
+  will be combined (in some order) until there
+  are no values of that key left. It should end up with a single
+  (key2, value2) pair for each key.
 
 1. Fill in the general_map function
 using operations on RDDs.
@@ -168,7 +174,7 @@ def load_input():
 def q4(rdd):
     # Input: the RDD from load_input
     # Output: the length of the dataset.
-    # You don't have to use general_map or general_reduce here (but you can if you want).
+    # You may use general_map or general_reduce here if you like (but you don't have to) to get the total count.
     # TODO
     raise NotImplementedError
 
@@ -248,12 +254,16 @@ def load_input_bigger():
 
 def q8_a():
     # version of Q6
+    # It should call into q6() with the new RDD!
+    # Don't re-implemented the q6 logic.
     # Output: a tuple (most common digit, most common frequency, least common digit, least common frequency)
     # TODO
     raise NotImplementedError
 
 def q8_b():
     # version of Q7
+    # It should call into q7() with the new RDD!
+    # Don't re-implemented the q6 logic.
     # Output: a tulpe (most common char, most common frequency, least common char, least common frequency)
     # TODO
     raise NotImplementedError
