@@ -453,7 +453,7 @@ def PART_1_PIPELINE():
         dfs = load_input()
     except NotImplementedError:
         print("Welcome to Part 1! Implement load_input() to get started.")
-        dfs = []
+        dfs = sc.parallelize([])
 
     # Questions 1-3
     log_answer("q1", q1)
@@ -465,7 +465,8 @@ def PART_1_PIPELINE():
     log_answer("q5", q5, dfs)
     log_answer("q6", q6, dfs)
     log_answer("q7", q7, dfs)
-    # 8: commentary
+    log_answer("q8a", q8_a)
+    log_answer("q8b", q8_b)
     # 9: commentary
     # 10: commentary
 
@@ -489,7 +490,7 @@ def PART_1_PIPELINE():
     if UNFINISHED > 0:
         print("Warning: there are unfinished questions.")
 
-    return UNFINISHED
+    return f"{UNFINISHED} unfinished questions"
 
 if __name__ == '__main__':
     log_answer("PART 1", PART_1_PIPELINE)
