@@ -72,3 +72,30 @@ sc.parallelize(data, parallelism)
 Hint:
 It should be possible to implement all the examples.
 The simplest one to try is probably Fig. 7, Type 1.
+
+## Part 2
+
+You can draw the graph from left-to-write or top-to-bottom.
+What we're looking for here is there should be some load_input functions
+at the very left (or very top),
+then arrows into the various general_map and general_reduce computations that you did.
+These should be shared if there were multiple questions where you used the same general_map function, but only if these shared the same data as input!
+For example Q5/6 and Q8 shoudl be separate nodes bc although they are the same computation, bc they don't use the same intermediate data.
+
+## Part 3
+
+It will help to re-use much of the code you had working in HW1.
+You should be able to use the generate_plot method that you created.
+
+For the reflection, remember to ignore task and pipeline parallelism!
+A simple assumption for data parallelism that we use is to imagine that your datasets
+will be split in half and each worker will process them in parallel, without any
+communication between them.
+That means you shouldn't have to worry about any overhead of communicating between
+the workers, for the purposes of the "theoretical" expectation.
+Technically speaking, this assumption
+is valid as long as we are only working with narrow operators, not wide ones.
+
+## Part 4
+
+TBD
