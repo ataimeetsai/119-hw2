@@ -3,14 +3,11 @@
 **Due date: Dec 9, 11:59pm**
 
 This homework will explore building parallel data pipelines in PySpark.
-Similar to Homework 1, it will be released in parts
-(I split Part 2 into two shorter parts, so there are now 4 parts total):
+There are 3 parts:
 
 - Part 1: Released Monday, November 25.
 
 - Parts 2 and 3: Released Tuesday, November 26.
-
-- Part 4: TBD
 
 ## Getting Started
 

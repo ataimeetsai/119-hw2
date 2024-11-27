@@ -95,7 +95,3 @@ That means you shouldn't have to worry about any overhead of communicating betwe
 the workers, for the purposes of the "theoretical" expectation.
 Technically speaking, this assumption
 is valid as long as we are only working with narrow operators, not wide ones.
-
-## Part 4
-
-TBD
