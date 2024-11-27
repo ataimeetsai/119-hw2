@@ -1,11 +1,11 @@
 """
 Part 3: Measuring Performance
 
-This part will explore how performance of real pipelines
+Now that you have drawn the dataflow graph in part 2,
+this part will explore how performance of real pipelines
 can differ from the theoretical model of dataflow graphs.
 
-Now that you have drawn the dataflow graph,
-measure the performance of your pipeline
+We will measure the performance of your pipeline
 using your ThroughputHelper and LatencyHelper from HW1.
 
 === Coding part ===
@@ -76,7 +76,7 @@ if you believe that different overheads are relevant for these different scenari
 
 === Grading notes ===
 
-Please write at least a paragraph for each question. (5 sentences each)
+In the reflection, please write at least a paragraph for each question. (5 sentences each)
 
 Please include specific numbers in your reflection (particularly for Q2).
 """
