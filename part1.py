@@ -19,6 +19,9 @@ Make sure that the output in part1-answers.txt looks correct.
 See "Grading notes" here:
 https://github.com/DavisPL-Teaching/119-hw1/blob/main/part1.py
 
+For Q5-Q7, make sure your answer uses general_map and general_reduce as much as possible.
+You will still need a single .map call at the beginning (to convert the RDD into key, value pairs), but after that point, you should only use general_map and general_reduce.
+
 If you aren't sure of the type of the output, please post a question on Piazza.
 """
 
@@ -199,7 +202,10 @@ And which is the least common, with what frequency?
 
 (If there are ties, you may answer any of the tied digits.)
 
-Your answer should use the general_map and general_reduce functions!
+The digit should be either an integer 0-9 or a character '0'-'9'.
+Frequency is the number of occurences of each value.
+
+Your answer should use the general_map and general_reduce functions as much as possible.
 """
 
 def q6(rdd):
@@ -234,6 +240,7 @@ Notes:
 - Use lowercase letters.
 - The word "and" should always appear after the "hundred" part (where present),
   but nowhere else.
+- Please implement this without using an external library such as `inflect`.
 """
 
 # *** Define helper function(s) here ***
