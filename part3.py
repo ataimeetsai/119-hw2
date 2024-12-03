@@ -77,7 +77,9 @@ using five levels of parallelism:
 
 For each level of parallelism, you should measure the throughput and latency as the number of input
 items increases, using the following input sizes:
-- N = 1, 10, 100, 1000, 10_000, 100_000, 1_000_000, 10_000_000
+- N = 1, 10, 100, 1000, 10_000, 100_000, 1_000_000.
+
+- Note that the larger sizes may take a while to run (for example, up to 30 minutes). You can try with smaller sizes to test your code first.
 
 You can generate any plots you like (for example, a bar chart or an x-y plot on a log scale,)
 but store them in the following 10 files,
