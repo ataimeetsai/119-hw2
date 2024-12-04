@@ -236,6 +236,8 @@ Examples:
     1,000,000 = one million
 
 Notes:
+- For "least frequent", count only letters which occur,
+  not letters which don't occur.
 - Please ignore spaces and hyphens.
 - Use lowercase letters.
 - The word "and" should always appear after the "hundred" part (where present),

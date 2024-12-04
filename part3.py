@@ -110,6 +110,8 @@ Clarifying notes:
 MapReduce is batch processing, so all input rows are processed as a batch
 and the latency of any individual input row is the same as the latency of the entire dataset.
 That is why we are assuming the latency will just be the running time of the entire dataset.
+
+- Set `NUM_RUNS` to `1` if you haven't already. Note that this will make the values for low numbers (like `N=1`, `N=10`, and `N=100`) vary quite unpredictably.
 """
 
 # Copy in ThroughputHelper and LatencyHelper
