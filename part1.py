@@ -231,6 +231,7 @@ Examples:
     513 = five hundred and thirteen
     801 = eight hundred and one
     999 = nine hundred and ninety nine
+    1001 = one thousand one
     500,501 = five hundred thousand five hundred and one
     555,555 = five hundred and fifty five thousand five hundred and fifty five
     1,000,000 = one million
@@ -242,6 +243,7 @@ Notes:
 - Use lowercase letters.
 - The word "and" should always appear after the "hundred" part (where present),
   but nowhere else.
+  (Note the 1001 case above which differs from some other implementations.)
 - Please implement this without using an external library such as `inflect`.
 """
 
@@ -365,7 +367,8 @@ including partitioning.
 === END OF Q15 ANSWER ===
 
 16.
-Lastly, try the same pipeline with at least 3 different levels of parallelism.
+Lastly, try the same pipeline as in Q14
+with at least 3 different levels of parallelism.
 
 Write three functions, a, b, and c that use different levels of parallelism.
 """
