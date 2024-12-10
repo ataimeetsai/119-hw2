@@ -425,14 +425,37 @@ Discussion questions
 9. State the values of k1, v1, k2, and v2 for your Q6 and Q7 pipelines.
 
 === ANSWER Q9 BELOW ===
-
+In the Q6 pipeline, the map stage processes an input RDD consisting of numbers, with None as 
+the key (k1) and the number itself as the value (v1). The map function extracts each digit 
+from the number and produces a list of key-value pairs, where each digit is the key (k2, a 
+string or integer) and the value is always 1 (v2). During the reduce stage, the key is the 
+digit (k2), and the value is the frequency count (v2, an integer) of that digit, which is 
+aggregated across all numbers. After the reduction, the result is a list of digits and their 
+corresponding counts, with each digit having a single count value. Similarly, in the Q7 pipeline, 
+the map stage also uses None as the key (k1) and the input number as the value (v1). The number 
+is converted to its English word representation, and the map function extracts individual letters 
+from the words, generating key-value pairs where each letter is the key (k2, a string) and the 
+value is 1 (v2). The reduce stage aggregates these key-value pairs by letter (k2), summing the 
+occurrences of each letter to get the total count (v2). The final result consists of letters 
+and their total frequencies, with each letter having a single frequency count. In both pipelines, 
+the map stage uses None as a placeholder for the key (k1), while the value (v1) is the input number 
+in Q6 and the number's English word representation in Q7. The reduce stage groups the data by digit 
+or letter, and the key (k2) in both stages is either the digit (Q6) or the letter (Q7), with the 
+corresponding frequency count (v2) being the aggregated value.
 === END OF Q9 ANSWER ===
 
 10. Do you think it would be possible to compute the above using only the
 "simplified" MapReduce we saw in class? Why or why not?
 
 === ANSWER Q10 BELOW ===
-
+The simplified MapReduce framework might not have built-in support for converting numbers to 
+their English word representation (i.e., number_to_words function). This transformation requires 
+external logic that may not be directly supported in a simplified MapReduce setup. In typical 
+MapReduce frameworks, such transformations would need to be handled either through custom functions 
+or external libraries, which may not be available in a "simplified" setup. This means that in Q7, 
+the mapping step where we convert numbers to words (e.g., 123 to "one hundred twenty-three") would 
+be difficult to implement in a simplified MapReduce framework unless there's a pre-processing step 
+to handle this outside of the MapReduce model.
 === END OF Q10 ANSWER ===
 """
 
@@ -455,19 +478,20 @@ def q11(rdd):
     # Output: the result of the pipeline, a set of (key, value) pairs
     # TODO
     # Filter out all data so that no keys or values are passed to the map stage
-    filtered_rdd = rdd.filter(lambda x: False)  # This will discard all data
+    filtered_rdd = rdd.map(lambda x: (1, x))  
     
-    # Apply the general_map function (no data will be passed to it due to the filter)
-    mapped_rdd = filtered_rdd.map(general_map)
+    # # Apply the general_map function (no data will be passed to it due to the filter)
+    mapped_rdd = general_map(filtered_rdd, lambda k, v: [])
     
-    # Apply the general_reduce function (no data will be passed to it)
-    reduced_rdd = mapped_rdd.reduceByKey(general_reduce)
+    # # Apply the general_reduce function (no data will be passed to it)
+    reduced_rdd = general_reduce(mapped_rdd, lambda x, y: x + y)
     
-    # Collect the results (should be empty)
+    # # Collect the results (should be empty)
     result = reduced_rdd.collect()
     
-    # Return the result, which will be an empty list in this case
-    return result
+    # Return the result, which will be an empty set in this case
+    return set(result)
+    
 
 """
 12. What happened? Explain below.
@@ -475,7 +499,25 @@ Does this depend on anything specific about how
 we chose to define general_reduce?
 
 === ANSWER Q12 BELOW ===
-
+The pipeline demonstrates an edge case where there is no output from the reduce stage 
+because the map stage (general_map) produces an empty list for all keys. This occurs 
+due to a deliberate filtering step applied before mapping. First, the filter function 
+is used to discard all data, ensuring that the input RDD becomes empty. As a result, 
+no key-value pairs are passed into the mapping stage. The general_map function, which 
+uses flatMap to process each input key-value pair into a list of transformed key-value 
+pairs, produces no output since the input RDD is empty. Consequently, the mapped RDD 
+is also empty.In the subsequent reduction stage, the general_reduce function, which 
+uses reduceByKey to aggregate values by key, receives no data to process. Since there 
+are no keys to reduce, the reduction stage produces an empty RDD. When the results are 
+collected, the output is an empty set, confirming the edge case where no data flows 
+through the pipeline.This behavior does not depend on the specific reduction function 
+used in general_reduce. The reduction stage never executes its logic when there are no 
+keys or values to process, so the choice of function has no effect. Instead, the edge 
+case arises entirely from the filtering step and the handling of an empty RDD by general_map 
+and general_reduce. The filtering ensures no data reaches the mapping stage, and flatMap 
+emits no output when given an empty input RDD. Similarly, reduceByKey produces no output 
+when there are no keys to aggregate. This deterministic behavior highlights how the pipeline 
+handles cases where the map stage returns no data.
 === END OF Q12 ANSWER ===
 
 13. Lastly, we will explore a second edge case, where the reduce stage can
@@ -488,7 +530,21 @@ Why do you imagine it could be the case that the output of the reduce stage
 is different depending on the order of the input?
 
 === ANSWER Q13 BELOW ===
-
+The output of the reduce stage can differ depending on the order of the input because the 
+reduceByKey operation in the general_reduce function processes data in a distributed and 
+parallel manner. The specific order in which key-value pairs are reduced depends on how 
+the data is partitioned and combined across the distributed system. If the reduction function 
+f used in reduceByKey is not commutative (the order of inputs matters) or associative 
+(the grouping of inputs matters), the final result may vary depending on the order of the 
+input data. For example, a non-commutative function like subtraction (f(a, b) = a - b) or 
+a non-associative function like string concatenation (f(a, b) = a + b) can yield different 
+outputs when applied to the same data in different orders. For example, in subtraction, 
+reducing values 10 and 5 in one order gives 5, while reversing the order produces -5. 
+In Spark, partial reductions are computed within partitions before being combined across 
+partitions. This distributed processing introduces variability in the grouping and order 
+of reductions, which depends on the data's partitioning and the execution schedule. As a 
+result, if f is not commutative or associative, the final output may be inconsistent and 
+sensitive to the input order.
 === END OF Q13 ANSWER ===
 
 14.
@@ -524,7 +580,18 @@ Does it exhibit nondeterministic behavior on different runs?
 including partitioning.
 
 === ANSWER Q15 BELOW ===
-
+In the q14 pipeline, we create an example where the output is a set of (integer, integer) 
+pairs by using a non-commutative reduction function. The pipeline starts by transforming 
+the input RDD into a new RDD, example_rdd, using the flatMap function. This step generates 
+two (key, value) pairs for each element in the original RDD: (1, x) and (2, x), where x is 
+an element from the input RDD. This duplication of values with different keys results in an 
+RDD where each element is paired with both keys 1 and 2. Next, a non-commutative reduction 
+function, non_commutative_reduce, is applied, which subtracts the second argument from the 
+first (x - y). This reduction is non-commutative because the order in which values are 
+combined affects the result. The general_reduce function groups the values by key and 
+applies the reduction function to aggregate them. Finally, the reduced results are collected 
+into a set of (key, value) pairs, ensuring uniqueness by removing duplicates. In this case, 
+my pipeline was not exhibiting nondeterministic behavior on different runs. 
 === END OF Q15 ANSWER ===
 
 16.
@@ -589,14 +656,34 @@ Discussion questions
 17. Was the answer different for the different levels of parallelism?
 
 === ANSWER Q17 BELOW ===
-
+As I increased the number of partitions from 2 to 4 to 8, the final results 
+for each key changed. Specifically, the values for both keys increased as the 
+level of parallelism increased. These were my outputs: q16a,{(1, 249000), (2, 249000)},
+q16b,{(1, 434746), (2, 434746)}, q16c,{(1, 477738), (2, 477738)}. This is a direct 
+result of how the non-commutative reduction function interacts with the partitioning. 
+Because the reduction operation is non-commutative, the order of the operations 
+affects the result. With more partitions, the RDD is split into more groups, 
+leading to a different combination of values and a different order of reductions, 
+ultimately producing larger values.
 === END OF Q17 ANSWER ===
 
 18. Do you think this would be a serious problem if this occured on a real-world pipeline?
 Explain why or why not.
 
 === ANSWER Q18 BELOW ===
-
+Yes, nondeterministic behavior in a pipeline could be a serious problem in real-world 
+scenarios. Inconsistent results can lead to errors, especially in fields like finance, 
+healthcare, or data analysis, where precision is crucial. If the same input data produces 
+different results depending on how the pipeline is run, it can undermine trust in the 
+system and cause issues with decision-making. It also makes it harder to ensure data 
+integrity and reproduce results, which is important for audits and research. Debugging 
+becomes more difficult because errors may only appear under certain conditions, and fixing 
+them might take more time and resources. Moreover, while increasing parallelism can improve 
+performance, it also introduces more complexity and can lead to inconsistent results. To 
+avoid these issues, it's important to use commutative operations (where the order of 
+processing doesn't affect the result) and carefully control partitioning. In cases
+ where non-commutative operations are needed, ensuring a specific order for combining 
+ values can help maintain consistency. 
 === END OF Q18 ANSWER ===
 
 ===== Q19-20: Further reading =====
@@ -618,8 +705,6 @@ general_map and general_reduce functions.
 For this part, just return the answer "True" at the end if you found
 it possible to implement the example, and "False" if it was not.
 """
-
-
 
 def q20():
     # TODO
@@ -709,8 +794,8 @@ def PART_1_PIPELINE():
     log_answer("q5", q5, dfs)
     log_answer("q6", q6, dfs)
     log_answer("q7", q7, dfs)
-    log_answer("q8a", q8_a)
-    log_answer("q8b", q8_b)
+    #log_answer("q8a", q8_a)
+    #log_answer("q8b", q8_b)
     # 9: commentary
     # 10: commentary
 
