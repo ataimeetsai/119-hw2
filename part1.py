@@ -794,8 +794,8 @@ def PART_1_PIPELINE():
     log_answer("q5", q5, dfs)
     log_answer("q6", q6, dfs)
     log_answer("q7", q7, dfs)
-    #log_answer("q8a", q8_a)
-    #log_answer("q8b", q8_b)
+    log_answer("q8a", q8_a)
+    log_answer("q8b", q8_b)
     # 9: commentary
     # 10: commentary
 
